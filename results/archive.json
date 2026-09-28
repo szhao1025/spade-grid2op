@@ -1,0 +1,155 @@
+[
+ {
+  "iteration": 0,
+  "name": "NominalGridScenario",
+  "code": "class NominalGridScenario(GridScenario):\n    NAME = \"NominalGridScenario\"\n    DESCRIPTION = \"Normal operating day: nominal demand and limits, no outages.\"\n    LOAD_SCALE = 1.0\n    THERMAL_SCALE = 1.0\n    MAX_STEPS = 288\n    HINT = \"Nothing unusual happens today.\"\n\n    def events(self, rng):\n        return []\n\n    def load_multiplier(self, t):\n        return 1.0",
+  "complexity": 0.0,
+  "n_events": 0,
+  "load_scale": 1.0,
+  "thermal_scale": 1.0,
+  "metrics": {
+   "survival_nohint": 1.0,
+   "survival_hinted": 1.0,
+   "regret": 0.0,
+   "feasible": true,
+   "max_rho_nohint": 0.93,
+   "episodes": 2
+  }
+ },
+ {
+  "iteration": 1,
+  "name": "WildfireDeEnergizationScenario",
+  "code": "class WildfireDeEnergizationScenario(GridScenario):\n    NAME = \"WildfireDeEnergizationScenario\"\n    DESCRIPTION = \"Simulates proactive line de-energization due to wildfire risk, causing complex cascading failures and increased demand. Skilled operators must carefully manage load and avoid critical lines from tripping simultaneously.\"\n    LOAD_SCALE = 1.04        # Slightly increased load to simulate peak demand\n    THERMAL_SCALE = 0.98     # Slightly tightened line limits due to weather conditions\n    MAX_STEPS = 288          # Episode duration\n    HINT = \"Be cautious with lines 6, 8, 9, and 15, as they are critical during peak load.\"\n\n    def events(self, rng):\n        # Define a sequence of outages that are spread out but include critical lines\n        outages = [\n            (30, 3),  # Critical line 3 trips at step 30\n            (60, 5),  # Critical line 5 trips at step 60\n            (90, 9),  # Critical line 9 trips at step 90\n            (120, 6), # Critical line 6 trips at step 120\n            (150, 8), # Critical line 8 trips at step 150\n            (180, 9)  # Critical line 9 trips again at step 180\n        ]\n        return outages\n\n    def load_multiplier(self, t):\n        # Increase load during the middle of the episode to simulate peak demand\n        if 120 <= t < 180:\n            return 1.1\n        return 1.0",
+  "complexity": 11.7,
+  "n_events": 6,
+  "load_scale": 1.04,
+  "thermal_scale": 0.98,
+  "metrics": {
+   "survival_nohint": 0.17,
+   "survival_hinted": 1.0,
+   "regret": 0.83,
+   "feasible": true,
+   "max_rho_nohint": 1.942,
+   "episodes": 2
+  }
+ },
+ {
+  "iteration": 2,
+  "name": "WildfireAndPeakDemandScenario",
+  "code": "class WildfireAndPeakDemandScenario(GridScenario):\n    NAME = \"WildfireAndPeakDemandScenario\"\n    DESCRIPTION = \"Simulates a scenario where multiple critical lines trip due to wildfire risk during a peak demand period, challenging operators to manage load and maintain grid stability.\"\n    LOAD_SCALE = 1.04        # Slightly increased load to simulate peak demand\n    THERMAL_SCALE = 0.95     # Tightly controlled lines due to weather conditions\n    MAX_STEPS = 288          # Episode duration\n    HINT = \"Be extremely cautious with lines 3, 5, 8, 9, and 15, as they are critical during peak load.\"\n\n    def events(self, rng):\n        # Define a sequence of outages that are spread out but include critical lines\n        outages = [\n            (30, 3),  # Critical line 3 trips at step 30\n            (60, 5),  # Critical line 5 trips at step 60\n            (90, 8),  # Critical line 8 trips at step 90\n            (120, 9), # Critical line 9 trips at step 120\n            (150, 15),# Critical line 15 trips at step 150\n            (180, 6), # Critical line 6 trips at step 180\n            (210, 15) # Critical line 15 trips again at step 210\n        ]\n        return outages\n\n    def load_multiplier(self, t):\n        # Increase load during the middle of the episode to simulate peak demand\n        if 120 <= t < 180:\n            return 1.1\n        return 1.0",
+  "complexity": 13.8,
+  "n_events": 7,
+  "load_scale": 1.04,
+  "thermal_scale": 0.95,
+  "metrics": {
+   "survival_nohint": 0.111,
+   "survival_hinted": 1.0,
+   "regret": 0.889,
+   "feasible": true,
+   "max_rho_nohint": 1.174,
+   "episodes": 2
+  }
+ },
+ {
+  "iteration": 3,
+  "name": "CriticalPeakLoadAndWildfireScenario",
+  "code": "class CriticalPeakLoadAndWildfireScenario(GridScenario):\n    NAME = \"CriticalPeakLoadAndWildfireScenario\"\n    DESCRIPTION = \"Simulates a scenario combining critical line outages with peak load and wildfire risks, challenging operators to balance thermal limits and load management.\"\n    LOAD_SCALE = 1.10        # Slightly increased load to simulate peak demand\n    THERMAL_SCALE = 0.92     # Tightened thermal limits due to wildfire risks\n    MAX_STEPS = 288          # Episode duration\n    HINT = \"Be cautious with lines 3, 5, 8, 9, and 15, as they are critical during peak load and wildfires.\"\n\n    def events(self, rng):\n        # Define a sequence of outages that are spread out but include critical lines\n        outages = [\n            (30, 3),  # Critical line 3 trips at step 30\n            (60, 5),  # Critical line 5 trips at step 60\n            (90, 8),  # Critical line 8 trips at step 90\n            (120, 9), # Critical line 9 trips at step 120\n            (150, 15),# Critical line 15 trips at step 150\n            (180, 6), # Critical line 6 trips at step 180\n            (210, 15) # Critical line 15 trips again at step 210\n        ]\n        return outages\n\n    def load_multiplier(self, t):\n        # Increase load during the middle of the episode to simulate peak demand\n        if 120 <= t < 180:\n            return 1.1\n        return 1.0",
+  "complexity": 15.6,
+  "n_events": 7,
+  "load_scale": 1.1,
+  "thermal_scale": 0.92,
+  "metrics": {
+   "survival_nohint": 0.111,
+   "survival_hinted": 1.0,
+   "regret": 0.889,
+   "feasible": true,
+   "max_rho_nohint": 1.284,
+   "episodes": 2
+  }
+ },
+ {
+  "iteration": 5,
+  "name": "FaultyRelayCriticalScenario",
+  "code": "class FaultyRelayCriticalScenario(GridScenario):\n    NAME = \"FaultyRelayCriticalScenario\"\n    DESCRIPTION = \"This scenario simulates a faulty relay misoperation, causing a healthy line to trip shortly after a real fault, turning a single contingency into a double contingency. The skilled operator must navigate thermal limits and load increases to avoid blackouts.\"\n    LOAD_SCALE = 1.05        # Slightly increased load to simulate peak demand\n    THERMAL_SCALE = 0.93     # Tightened thermal limits due to faulty relay\n    MAX_STEPS = 288          # Episode duration\n    HINT = \"Be cautious with lines 3, 5, 8, 9, and 15, as they are critical during peak load and faulty relay events.\"\n\n    def events(self, rng):\n        # Define a sequence of outages that are spread out but include critical lines\n        outages = [\n            (30, 3),  # Critical line 3 trips at step 30\n            (60, 5),  # Critical line 5 trips at step 60\n            (90, 8),  # Critical line 8 trips at step 90\n            (120, 9), # Critical line 9 trips at step 120\n            (150, 15),# Critical line 15 trips at step 150\n            (180, 6), # Critical line 6 trips at step 180\n            (210, 15),# Critical line 15 trips again at step 210\n            (240, 3), # Faulty relay trips healthy line 3 at step 240, after real trip 30\n            (270, 9), # Faulty relay trips healthy line 9 at step 270, after real trip 120\n        ]\n        return outages\n\n    def load_multiplier(self, t):\n        # Increase load during the middle of the episode to simulate peak demand\n        if 120 <= t < 180:\n            return 1.05\n        return 1.0",
+  "complexity": 15.9,
+  "n_events": 9,
+  "load_scale": 1.05,
+  "thermal_scale": 0.93,
+  "metrics": {
+   "survival_nohint": 0.111,
+   "survival_hinted": 1.0,
+   "regret": 0.889,
+   "feasible": true,
+   "max_rho_nohint": 1.211,
+   "episodes": 2
+  }
+ },
+ {
+  "iteration": 6,
+  "name": "WildfireAndPeakDemandScenario",
+  "code": "class WildfireAndPeakDemandScenario(GridScenario):\n    NAME = \"WildfireAndPeakDemandScenario\"\n    DESCRIPTION = \"This scenario simulates a combination of critical line outages due to wildfire de-energization and a peak demand period, testing the operator's ability to manage thermal limits and load during stressful conditions.\"\n    LOAD_SCALE = 1.04        # Slightly increased load to simulate peak demand\n    THERMAL_SCALE = 0.95     # Tightened thermal limits due to critical lines and peak load\n    MAX_STEPS = 288          # Episode duration\n    HINT = \"Be cautious with lines 3, 5, 8, 9, and 15, as they are critical during peak load and wildfire events.\"\n\n    def events(self, rng):\n        # Define a sequence of outages that are spread out but include critical lines\n        outages = [\n            (30, 3),  # Critical line 3 trips at step 30\n            (60, 5),  # Critical line 5 trips at step 60\n            (90, 8),  # Critical line 8 trips at step 90\n            (120, 9), # Critical line 9 trips at step 120\n            (150, 15),# Critical line 15 trips at step 150\n            (180, 6), # Critical line 6 trips at step 180\n            (210, 15),# Critical line 15 trips again at step 210\n            (240, 3), # Faulty relay trips healthy line 3 at step 240, after real trip 30\n            (270, 9), # Faulty relay trips healthy line 9 at step 270, after real trip 120\n            (100, 0), # Line 0 trips at step 100\n            (130, 1), # Line 1 trips at step 130\n            (160, 4), # Line 4 trips at step 160\n        ]\n        return outages\n\n    def load_multiplier(self, t):\n        # Increase load during the middle of the episode to simulate peak demand\n        if 120 <= t < 180:\n            return 1.04\n        return 1.0",
+  "complexity": 21.2,
+  "n_events": 12,
+  "load_scale": 1.04,
+  "thermal_scale": 0.95,
+  "metrics": {
+   "survival_nohint": 0.111,
+   "survival_hinted": 1.0,
+   "regret": 0.889,
+   "feasible": true,
+   "max_rho_nohint": 1.174,
+   "episodes": 2
+  }
+ },
+ {
+  "iteration": 7,
+  "name": "PlannedMaintenanceAndPeakDemandScenario",
+  "code": "class PlannedMaintenanceAndPeakDemandScenario(GridScenario):\n    NAME = \"PlannedMaintenanceAndPeakDemandScenario\"\n    DESCRIPTION = \"This scenario simulates unexpected peak demand coinciding with planned maintenance outages, increasing thermal stress on critical lines and complicating operator decision-making.\"\n    LOAD_SCALE = 1.1       # Slightly increased load to simulate peak demand\n    THERMAL_SCALE = 0.92   # Tightened thermal limits due to critical lines and peak load\n    MAX_STEPS = 288        # Episode duration\n    HINT = \"Be cautious with lines 6, 8, 9, 15, and 17, as they are critical during peak load and maintenance events.\"\n\n    def events(self, rng):\n        # Define a sequence of outages that are spread out but include critical lines\n        outages = [\n            (30, 6),  # Planned maintenance of critical line 6 at step 30\n            (60, 8),  # Planned maintenance of critical line 8 at step 60\n            (90, 9),  # Planned maintenance of critical line 9 at step 90\n            (120, 15), # Planned maintenance of critical line 15 at step 120\n            (150, 17), # Planned maintenance of critical line 17 at step 150\n            (180, 3),  # Critical line 3 trips at step 180\n            (210, 5),  # Critical line 5 trips at step 210\n            (240, 15), # Critical line 15 trips again at step 240\n            (270, 9),  # Critical line 9 trips again at step 270\n            (100, 0),  # Line 0 trips at step 100\n            (130, 1),  # Line 1 trips at step 130\n            (160, 4),  # Line 4 trips at step 160\n        ]\n        return outages\n\n    def load_multiplier(self, t):\n        # Increase load during the middle of the episode to simulate peak demand\n        if 120 <= t < 180:\n            return 1.1\n        return 1.0",
+  "complexity": 24.1,
+  "n_events": 12,
+  "load_scale": 1.1,
+  "thermal_scale": 0.92,
+  "metrics": {
+   "survival_nohint": 0.111,
+   "survival_hinted": 1.0,
+   "regret": 0.889,
+   "feasible": true,
+   "max_rho_nohint": 1.132,
+   "episodes": 2
+  }
+ },
+ {
+  "iteration": 9,
+  "name": "EveningRampAndMaintenanceScenario",
+  "code": "class EveningRampAndMaintenanceScenario(GridScenario):\n    NAME = \"EveningRampAndMaintenanceScenario\"\n    DESCRIPTION = \"This scenario simulates a critical evening demand peak coinciding with multiple maintenance outages, creating a complex challenge for operators to manage thermal stress and maintain grid stability.\"\n    LOAD_SCALE = 1.12      # Slightly increased load to simulate peak demand\n    THERMAL_SCALE = 0.93   # Tightened thermal limits due to critical lines and peak load\n    MAX_STEPS = 288        # Episode duration\n    HINT = \"Be cautious with lines 6, 8, 9, 15, and 17, as they are critical during peak load and maintenance events.\"\n\n    def events(self, rng):\n        # Define a sequence of outages that are spread out but include critical lines\n        outages = [\n            (20, 6),  # Planned maintenance of critical line 6 at step 20\n            (50, 8),  # Planned maintenance of critical line 8 at step 50\n            (80, 9),  # Planned maintenance of critical line 9 at step 80\n            (110, 15), # Planned maintenance of critical line 15 at step 110\n            (140, 17), # Planned maintenance of critical line 17 at step 140\n            (170, 3),  # Critical line 3 trips at step 170\n            (200, 5),  # Critical line 5 trips at step 200\n            (230, 15), # Critical line 15 trips again at step 230\n            (260, 9),  # Critical line 9 trips again at step 260\n            (30, 0),   # Line 0 trips at step 30\n            (60, 1),   # Line 1 trips at step 60\n            (90, 4)    # Line 4 trips at step 90\n        ]\n        return outages\n\n    def load_multiplier(self, t):\n        # Increase load during the middle of the episode to simulate peak demand\n        if 120 <= t < 180:\n            return 1.12\n        return 1.0",
+  "complexity": 24.5,
+  "n_events": 12,
+  "load_scale": 1.12,
+  "thermal_scale": 0.93,
+  "metrics": {
+   "survival_nohint": 0.059,
+   "survival_hinted": 1.0,
+   "regret": 0.941,
+   "feasible": true,
+   "max_rho_nohint": 1.21,
+   "episodes": 2
+  }
+ },
+ {
+  "iteration": 11,
+  "name": "HeatWaveAndMaintenanceScenario",
+  "code": "class HeatWaveAndMaintenanceScenario(GridScenario):\n    NAME = \"HeatWaveAndMaintenanceScenario\"\n    DESCRIPTION = \"Simulates a heat wave pushing demand to peak while critical lines undergo maintenance, creating a complex challenge for operators to manage thermal stress and maintain grid stability.\"\n    LOAD_SCALE = 1.12      # Slightly increased load to simulate peak demand\n    THERMAL_SCALE = 0.9    # Tightened thermal limits due to critical lines and heat\n    MAX_STEPS = 288        # Episode duration\n    HINT = \"Be cautious with lines 6, 8, 9, 15, and 17, as they are critical during peak load and maintenance events.\"\n\n    def events(self, rng):\n        # Define a sequence of outages that are spread out but include critical lines\n        outages = [\n            (20, 6),  # Planned maintenance of critical line 6 at step 20\n            (50, 8),  # Planned maintenance of critical line 8 at step 50\n            (80, 9),  # Planned maintenance of critical line 9 at step 80\n            (110, 15), # Planned maintenance of critical line 15 at step 110\n            (140, 17), # Planned maintenance of critical line 17 at step 140\n            (170, 3),  # Critical line 3 trips at step 170\n            (200, 5),  # Critical line 5 trips at step 200\n            (230, 15), # Critical line 15 trips again at step 230\n            (260, 9),  # Critical line 9 trips again at step 260\n            (30, 0),   # Line 0 trips at step 30\n            (60, 1),   # Line 1 trips at step 60\n            (90, 4)    # Line 4 trips at step 90\n        ]\n        return outages\n\n    def load_multiplier(self, t):\n        # Increase load during the middle of the episode to simulate peak demand\n        if 120 <= t < 180:\n            return 1.12\n        return 1.0",
+  "complexity": 25.1,
+  "n_events": 12,
+  "load_scale": 1.12,
+  "thermal_scale": 0.9,
+  "metrics": {
+   "survival_nohint": 0.059,
+   "survival_hinted": 1.0,
+   "regret": 0.941,
+   "feasible": true,
+   "max_rho_nohint": 1.25,
+   "episodes": 2
+  }
+ }
+]
