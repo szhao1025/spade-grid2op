@@ -138,5 +138,4 @@ results/                    logs, accepted scenario code (results/envs/), figure
 
 ## AI assistance
 
-This project was developed with assistance from Claude Code (Anthropic), which was used to write code,
-run the experiments, and draft this README.
+Developed with assistance from Claude Code (Anthropic).
